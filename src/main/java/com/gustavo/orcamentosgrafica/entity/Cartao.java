@@ -20,6 +20,7 @@ public class Cartao {
 
     private Integer quantidade;
 
+    @Column(precision = 10, scale = 2)
     private BigDecimal preco;
 
     public Cartao(){
