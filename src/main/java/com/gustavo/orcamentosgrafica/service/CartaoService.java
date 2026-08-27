@@ -23,4 +23,8 @@ public class CartaoService {
         return cartaoRepository.findAll();
     }
 
+    public List<Cartao> buscarPorConfiguracao(String material, Integer gramatura, String impressao){
+        return cartaoRepository.findByMaterialAndGramaturaAndImpressao(material, gramatura, impressao);
+    }
+
 }

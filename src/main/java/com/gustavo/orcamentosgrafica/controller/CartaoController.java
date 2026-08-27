@@ -29,4 +29,9 @@ public class CartaoController {
         return cartaoService.listar();
     }
 
+    @GetMapping("/buscar")
+    public List<Cartao> buscarPorConfiguracao(@RequestParam String material, @RequestParam Integer gramatura, @RequestParam String impressao){
+        return cartaoService.buscarPorConfiguracao(material, gramatura, impressao);
+    }
+
 }
