@@ -7,6 +7,7 @@ import com.gustavo.orcamentosgrafica.service.PedidoCartaoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,9 @@ public class PedidoCartaoController {
 
     @PostMapping(consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
-    public PedidoCartaoResponse criar(@ModelAttribute PedidoCartaoRequest request) {
+    public PedidoCartaoResponse criar(@ModelAttribute PedidoCartaoRequest request)
+            throws IOException {
+
         return pedidoCartaoService.criar(request);
     }
 

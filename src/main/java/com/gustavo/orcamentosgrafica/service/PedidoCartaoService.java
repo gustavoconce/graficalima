@@ -13,6 +13,7 @@ import com.gustavo.orcamentosgrafica.repository.PedidoCartaoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -22,14 +23,18 @@ public class PedidoCartaoService {
     private final ClienteRepository clienteRepository;
     private final CartaoRepository cartaoRepository;
 
+    private final GoogleDriveService googleDriveService;
+
     public PedidoCartaoService(
             PedidoCartaoRepository pedidoCartaoRepository,
             ClienteRepository clienteRepository,
-            CartaoRepository cartaoRepository) {
+            CartaoRepository cartaoRepository,
+            GoogleDriveService googleDriveService) {
 
         this.pedidoCartaoRepository = pedidoCartaoRepository;
         this.clienteRepository = clienteRepository;
         this.cartaoRepository = cartaoRepository;
+        this.googleDriveService = googleDriveService;
     }
 
     private void validarArte(MultipartFile arte){
@@ -55,7 +60,7 @@ public class PedidoCartaoService {
 
     }
 
-    public PedidoCartaoResponse criar(PedidoCartaoRequest request) {
+    public PedidoCartaoResponse criar(PedidoCartaoRequest request) throws IOException {
 
         validarArte(request.getArte());
 
@@ -65,8 +70,14 @@ public class PedidoCartaoService {
         Cartao cartao = cartaoRepository.findById(request.getCartaoId())
                 .orElseThrow(() -> new ArquivoInvalidoException("Cartão não encontrado"));
 
-        PedidoCartao pedido = new PedidoCartao(cartao, cliente,null, StatusPedido.PENDENTE
-                );
+        String fileId = googleDriveService.upload(request.getArte());
+
+        PedidoCartao pedido = new PedidoCartao(
+                cartao,
+                cliente,
+                fileId,
+                StatusPedido.PENDENTE
+        );
 
         PedidoCartao pedidoSalvo = pedidoCartaoRepository.save(pedido);
 

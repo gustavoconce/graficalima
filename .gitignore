@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Google credentials ###
+client_secret.json
+google-drive-credentials.json
+tokens/
