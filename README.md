@@ -1,4 +1,4 @@
-# Gráfica Lima — Sistema de Orçamentos
+# Gráfica Lima: Sistema de Orçamentos
 
 Sistema web desenvolvido para automatizar a solicitação e o gerenciamento de orçamentos de uma gráfica.
 
