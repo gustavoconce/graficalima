@@ -19,9 +19,9 @@ public class PedidoCartaoController {
         this.pedidoCartaoService = pedidoCartaoService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
-    public PedidoCartaoResponse criar(@RequestBody PedidoCartaoRequest request) {
+    public PedidoCartaoResponse criar(@ModelAttribute PedidoCartaoRequest request) {
         return pedidoCartaoService.criar(request);
     }
 

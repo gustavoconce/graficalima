@@ -6,10 +6,12 @@ import com.gustavo.orcamentosgrafica.entity.Cartao;
 import com.gustavo.orcamentosgrafica.entity.Cliente;
 import com.gustavo.orcamentosgrafica.entity.PedidoCartao;
 import com.gustavo.orcamentosgrafica.entity.StatusPedido;
+import com.gustavo.orcamentosgrafica.exception.ArquivoInvalidoException;
 import com.gustavo.orcamentosgrafica.repository.CartaoRepository;
 import com.gustavo.orcamentosgrafica.repository.ClienteRepository;
 import com.gustavo.orcamentosgrafica.repository.PedidoCartaoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,13 +32,38 @@ public class PedidoCartaoService {
         this.cartaoRepository = cartaoRepository;
     }
 
+    private void validarArte(MultipartFile arte){
+        if (arte == null || arte.isEmpty()) {
+            throw new ArquivoInvalidoException("A arte é obrigatória!");
+        }
+
+        if (arte.getSize() > 10 * 1024 * 1024) {
+            throw new ArquivoInvalidoException("A arte deve ter no máximo 10MB!");
+        }
+
+        String nomeArquivo = arte.getOriginalFilename();
+
+        if (nomeArquivo == null || !nomeArquivo.toLowerCase().endsWith(".pdf")){
+            throw new ArquivoInvalidoException("O arquivo deve estar no formato pdf");
+        }
+
+        String contentType = arte.getContentType();
+
+        if (!"application/pdf".equals(contentType)){
+            throw new ArquivoInvalidoException("O arquivo enviado não é um pdf válido!");
+        }
+
+    }
+
     public PedidoCartaoResponse criar(PedidoCartaoRequest request) {
 
+        validarArte(request.getArte());
+
         Cliente cliente = clienteRepository.findById(request.getClienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new ArquivoInvalidoException("Cliente não encontrado"));
 
         Cartao cartao = cartaoRepository.findById(request.getCartaoId())
-                .orElseThrow(() -> new RuntimeException("Cartão não encontrado"));
+                .orElseThrow(() -> new ArquivoInvalidoException("Cartão não encontrado"));
 
         PedidoCartao pedido = new PedidoCartao(cartao, cliente,null, StatusPedido.PENDENTE
                 );

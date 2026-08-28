@@ -1,10 +1,14 @@
 package com.gustavo.orcamentosgrafica.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class PedidoCartaoRequest {
 
     private Long clienteId;
 
     private Long cartaoId;
+
+    private MultipartFile arte;
 
     public PedidoCartaoRequest() {
     }
@@ -25,4 +29,11 @@ public class PedidoCartaoRequest {
         this.cartaoId = cartaoId;
     }
 
+    public MultipartFile getArte() {
+        return arte;
+    }
+
+    public void setArte(MultipartFile arte) {
+        this.arte = arte;
+    }
 }
